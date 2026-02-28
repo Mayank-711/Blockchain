@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Result{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Verification Result</h1>
+        <div>
+            <a href="{% url 'verify_certificate' %}" class="btn btn-primary">Verify Another</a>
+            <a href="{% url 'verification_history' %}" class="btn btn-outline">View History</a>
+        </div>
+    </div>
+
+    <!-- Result Banner -->
+    <div class="result-banner result-{{ log.status }}">
+        {% if log.status == 'verified' %}
+            <div class="result-icon">&#10004;</div>
+            <h2>CERTIFICATE VERIFIED</h2>
+            <p>This certificate is authentic and matches the blockchain record.</p>
+        {% elif log.status == 'tampered' %}
+            <div class="result-icon">&#10008;</div>
+            <h2>TAMPERED / INVALID</h2>
+            <p>This certificate does NOT match any blockchain record. It may have been tampered with or is not registered.</p>
+        {% else %}
+            <div class="result-icon">&#10067;</div>
+            <h2>NOT FOUND</h2>
+            <p>No matching certificate found on the blockchain.</p>
+        {% endif %}
+    </div>
+
+    <!-- Verification Details -->
+    <div class="detail-card">
+        <h2 class="section-title-sm">&#128270; Verification Details</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">Uploaded File</span>
+                <span class="detail-value">{{ log.uploaded_file_name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">
+                    <span class="status-badge status-{{ log.status }}">
+                        {{ log.get_status_display }}
+                    </span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">File Hash (SHA-256)</span>
+                <span class="detail-value hash-text-full">{{ log.uploaded_file_hash }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Verified At</span>
+                <span class="detail-value">{{ log.verified_at|date:"M d, Y H:i:s" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blockchain Details (if verified) -->
+    {% if log.status == 'verified' and block %}
+    <div class="detail-card card-blockchain">
+        <h2 class="section-title-sm">&#9939; Blockchain Transaction Details</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">Transaction ID</span>
+                <span class="detail-value hash-text-full">{{ log.transaction_id }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Block Index</span>
+                <span class="detail-value">
+                    <span class="badge badge-blockchain">#{{ log.block_index }}</span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Block Hash</span>
+                <span class="detail-value hash-text-full">{{ log.block_hash }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Previous Hash</span>
+                <span class="detail-value hash-text-full">{{ block.previous_hash }}</span>
+            </div>
+            {% if log.matched_certificate %}
+            <div class="detail-item">
+                <span class="detail-label">Certificate Title</span>
+                <span class="detail-value">{{ log.matched_certificate.title }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Student Name</span>
+                <span class="detail-value">{{ log.matched_certificate.student.name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Student ID</span>
+                <span class="detail-value">{{ log.matched_certificate.student.student_id }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Issuing Institution</span>
+                <span class="detail-value">{{ log.matched_certificate.uploaded_by.profile.institution_name }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- OCR Output -->
+    <div class="detail-card">
+        <h2 class="section-title-sm">&#129504; AI OCR Extracted Text</h2>
+        <pre class="ocr-output">{{ log.ocr_text }}</pre>
+    </div>
+</div>
+{% endblock %}

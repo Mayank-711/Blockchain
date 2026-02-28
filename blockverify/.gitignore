@@ -1,0 +1,37 @@
+# ============================================
+# BlockVerify .gitignore
+# ============================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Environment Variables (contains secrets)
+.env
+
+# Django
+*.log
+staticfiles/
+
+# Media uploads
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

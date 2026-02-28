@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Certificate{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Upload Certificate</h1>
+        <a href="{% url 'certificate_list' %}" class="btn btn-outline">Back to Certificates</a>
+    </div>
+
+    <div class="form-card">
+        <div class="upload-info">
+            <h3>&#128274; What happens when you upload:</h3>
+            <ol>
+                <li>File is saved securely to the server</li>
+                <li>AI extracts text from the document (OCR)</li>
+                <li>SHA-256 hash is generated from the file</li>
+                <li>Hash + metadata are stored on the blockchain</li>
+                <li>Transaction ID is saved in the database</li>
+            </ol>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="field-errors">
+                    {% for error in field.errors %}
+                    <span class="error-text">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="upload-btn">
+                    Upload & Store on Blockchain
+                </button>
+                <a href="{% url 'certificate_list' %}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Show loading state while uploading
+    document.querySelector('form').addEventListener('submit', function() {
+        const btn = document.getElementById('upload-btn');
+        btn.textContent = 'Processing... Please wait';
+        btn.disabled = true;
+        btn.classList.add('btn-loading');
+    });
+</script>
+{% endblock %}

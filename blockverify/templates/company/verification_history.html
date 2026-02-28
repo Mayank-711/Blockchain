@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification History{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Verification History</h1>
+        <a href="{% url 'verify_certificate' %}" class="btn btn-primary">+ Verify New</a>
+    </div>
+
+    {% if logs %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>File Name</th>
+                    <th>Status</th>
+                    <th>File Hash</th>
+                    <th>Block #</th>
+                    <th>Transaction ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.verified_at|date:"M d, Y H:i" }}</td>
+                    <td>{{ log.uploaded_file_name }}</td>
+                    <td>
+                        <span class="status-badge status-{{ log.status }}">
+                            {% if log.status == 'verified' %}&#10004; VERIFIED
+                            {% elif log.status == 'tampered' %}&#10008; TAMPERED
+                            {% else %}&#10067; NOT FOUND{% endif %}
+                        </span>
+                    </td>
+                    <td class="hash-text" title="{{ log.uploaded_file_hash }}">{{ log.uploaded_file_hash|truncatechars:16 }}</td>
+                    <td>{% if log.block_index is not None %}<span class="badge badge-blockchain">#{{ log.block_index }}</span>{% else %}-{% endif %}</td>
+                    <td class="hash-text">{{ log.transaction_id|truncatechars:12|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'verification_result' log.id %}" class="btn btn-sm btn-outline">Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state-card">
+        <div class="empty-icon">&#128270;</div>
+        <h3>No Verifications Yet</h3>
+        <p>Upload a certificate to verify its authenticity against the blockchain.</p>
+        <a href="{% url 'verify_certificate' %}" class="btn btn-primary">Verify Certificate</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

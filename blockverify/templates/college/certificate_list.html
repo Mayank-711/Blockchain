@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificates{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Issued Certificates</h1>
+        <a href="{% url 'upload_certificate' %}" class="btn btn-primary">+ Upload Certificate</a>
+    </div>
+
+    {% if certificates %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Student</th>
+                    <th>Type</th>
+                    <th>Hash</th>
+                    <th>Block #</th>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cert in certificates %}
+                <tr>
+                    <td><strong>{{ cert.title }}</strong></td>
+                    <td>{{ cert.student.name }}</td>
+                    <td><span class="badge badge-type">{{ cert.get_certificate_type_display }}</span></td>
+                    <td class="hash-text" title="{{ cert.file_hash }}">{{ cert.file_hash|truncatechars:16 }}</td>
+                    <td><span class="badge badge-blockchain">#{{ cert.block_index }}</span></td>
+                    <td class="hash-text" title="{{ cert.transaction_id }}">{{ cert.transaction_id|truncatechars:12 }}</td>
+                    <td>{{ cert.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'certificate_detail' cert.id %}" class="btn btn-sm btn-outline">Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state-card">
+        <div class="empty-icon">&#128196;</div>
+        <h3>No Certificates Yet</h3>
+        <p>Upload your first certificate to store it on the blockchain.</p>
+        <a href="{% url 'upload_certificate' %}" class="btn btn-primary">Upload Certificate</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

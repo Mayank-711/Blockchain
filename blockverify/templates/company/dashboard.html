@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Company Dashboard</h1>
+        <p class="text-muted">Welcome, {{ user.profile.institution_name }}</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card stat-card-blue">
+            <div class="stat-number">{{ total_verifications }}</div>
+            <div class="stat-label">Total Verifications</div>
+        </div>
+        <div class="stat-card stat-card-green">
+            <div class="stat-number">{{ verified_count }}</div>
+            <div class="stat-label">Verified</div>
+        </div>
+        <div class="stat-card stat-card-red">
+            <div class="stat-number">{{ tampered_count }}</div>
+            <div class="stat-label">Tampered / Invalid</div>
+        </div>
+        <div class="stat-card stat-card-gray">
+            <div class="stat-number">{{ not_found_count }}</div>
+            <div class="stat-label">Not Found</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="action-cards">
+        <a href="{% url 'verify_certificate' %}" class="action-card action-card-primary">
+            <div class="action-icon">&#128270;</div>
+            <h3>Verify Certificate</h3>
+            <p>Upload a certificate to verify its authenticity</p>
+        </a>
+        <a href="{% url 'verification_history' %}" class="action-card">
+            <div class="action-icon">&#128203;</div>
+            <h3>Verification History</h3>
+            <p>View all past verification results</p>
+        </a>
+        <a href="{% url 'blockchain_explorer' %}" class="action-card">
+            <div class="action-icon">&#9939;</div>
+            <h3>Blockchain Explorer</h3>
+            <p>Browse the certificate blockchain</p>
+        </a>
+    </div>
+
+    <!-- Recent Verifications -->
+    <div class="dashboard-section">
+        <h2 class="section-title-sm">Recent Verifications</h2>
+        {% if recent_verifications %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Status</th>
+                        <th>Hash</th>
+                        <th>Block #</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in recent_verifications %}
+                    <tr>
+                        <td>{{ log.uploaded_file_name }}</td>
+                        <td>
+                            <span class="status-badge status-{{ log.status }}">
+                                {% if log.status == 'verified' %}&#10004; VERIFIED
+                                {% elif log.status == 'tampered' %}&#10008; TAMPERED
+                                {% else %}&#10067; NOT FOUND{% endif %}
+                            </span>
+                        </td>
+                        <td class="hash-text">{{ log.uploaded_file_hash|truncatechars:16 }}</td>
+                        <td>{% if log.block_index is not None %}<span class="badge badge-blockchain">#{{ log.block_index }}</span>{% else %}-{% endif %}</td>
+                        <td>{{ log.verified_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'verification_result' log.id %}" class="btn btn-sm btn-outline">Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-state">No verifications yet. <a href="{% url 'verify_certificate' %}">Verify your first certificate</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

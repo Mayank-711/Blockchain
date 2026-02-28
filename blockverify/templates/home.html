@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Blockchain-Based<br>Certificate Verification</h1>
+        <p class="hero-subtitle">
+            Secure, tamper-proof certificate storage and instant verification
+            powered by blockchain technology and AI-driven OCR.
+        </p>
+        <div class="hero-actions">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{% url 'login' %}" class="btn btn-outline btn-lg">Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#127891;</div>
+                <h3>College Portal</h3>
+                <p>Colleges upload student certificates. The system extracts text via AI, generates a SHA-256 hash, and stores it immutably on the blockchain.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#9939;</div>
+                <h3>Blockchain Storage</h3>
+                <p>Each certificate's hash is stored in a tamper-proof blockchain. Any modification to the original document will produce a different hash.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#127970;</div>
+                <h3>Company Verification</h3>
+                <p>Companies upload received certificates. The system hashes the file and compares it against the blockchain — instant VERIFIED or TAMPERED result.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">SHA-256</div>
+                <div class="stat-label">Cryptographic Hashing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">AI OCR</div>
+                <div class="stat-label">Gemma AI Extraction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Tamper Detection</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

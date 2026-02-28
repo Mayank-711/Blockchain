@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificate Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Certificate Details</h1>
+        <a href="{% url 'certificate_list' %}" class="btn btn-outline">Back to Certificates</a>
+    </div>
+
+    <!-- Certificate Info -->
+    <div class="detail-card">
+        <h2 class="section-title-sm">&#128196; Certificate Information</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">Title</span>
+                <span class="detail-value">{{ certificate.title }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Type</span>
+                <span class="detail-value">
+                    <span class="badge badge-type">{{ certificate.get_certificate_type_display }}</span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Student</span>
+                <span class="detail-value">{{ certificate.student.name }} ({{ certificate.student.student_id }})</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Description</span>
+                <span class="detail-value">{{ certificate.description|default:"No description" }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Issued Date</span>
+                <span class="detail-value">{{ certificate.issued_date|date:"M d, Y"|default:"Not specified" }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Uploaded On</span>
+                <span class="detail-value">{{ certificate.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+            <div class="detail-item detail-item-full">
+                <span class="detail-label">File</span>
+                <span class="detail-value">
+                    <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline">
+                        View Certificate File
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blockchain Info -->
+    <div class="detail-card card-blockchain">
+        <h2 class="section-title-sm">&#9939; Blockchain Record</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">Transaction ID</span>
+                <span class="detail-value hash-text-full">{{ certificate.transaction_id }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">File Hash (SHA-256)</span>
+                <span class="detail-value hash-text-full">{{ certificate.file_hash }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Block Index</span>
+                <span class="detail-value">
+                    <span class="badge badge-blockchain">#{{ certificate.block_index }}</span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Block Hash</span>
+                <span class="detail-value hash-text-full">{{ certificate.block_hash }}</span>
+            </div>
+            {% if block %}
+            <div class="detail-item">
+                <span class="detail-label">Previous Hash</span>
+                <span class="detail-value hash-text-full">{{ block.previous_hash }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Nonce</span>
+                <span class="detail-value">{{ block.nonce }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- OCR Output -->
+    <div class="detail-card">
+        <h2 class="section-title-sm">&#129504; AI OCR Extracted Text</h2>
+        <pre class="ocr-output">{{ certificate.ocr_text }}</pre>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Blockchain Explorer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>&#9939; Blockchain Explorer</h1>
+        <div>
+            <span class="badge {% if chain_valid %}badge-success{% else %}badge-danger{% endif %}">
+                Chain: {% if chain_valid %}Valid &#10004;{% else %}Invalid &#10008;{% endif %}
+            </span>
+            <span class="badge badge-info">{{ chain_length }} blocks</span>
+        </div>
+    </div>
+
+    <div class="blockchain-chain">
+        {% for block in blocks reversed %}
+        <div class="block-card {% if forloop.last %}block-genesis{% endif %}">
+            <div class="block-header">
+                <span class="block-index">Block #{{ block.index }}</span>
+                {% if forloop.last %}<span class="badge badge-genesis">Genesis</span>{% endif %}
+            </div>
+            <div class="block-body">
+                <div class="block-field">
+                    <span class="block-label">Hash</span>
+                    <span class="block-value hash-text-full">{{ block.current_hash }}</span>
+                </div>
+                <div class="block-field">
+                    <span class="block-label">Previous Hash</span>
+                    <span class="block-value hash-text-full">{{ block.previous_hash }}</span>
+                </div>
+                <div class="block-field">
+                    <span class="block-label">Nonce</span>
+                    <span class="block-value">{{ block.nonce }}</span>
+                </div>
+
+                {% if block.data.student_name != 'Genesis' %}
+                <div class="block-data">
+                    <span class="block-label">Data</span>
+                    <div class="block-data-grid">
+                        <div><strong>Student:</strong> {{ block.data.student_name }}</div>
+                        <div><strong>ID:</strong> {{ block.data.student_id }}</div>
+                        <div><strong>Type:</strong> {{ block.data.certificate_type }}</div>
+                        <div><strong>Title:</strong> {{ block.data.title }}</div>
+                        <div><strong>Institution:</strong> {{ block.data.institution }}</div>
+                        <div><strong>Cert Hash:</strong> <span class="hash-text">{{ block.data.certificate_hash|truncatechars:24 }}</span></div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not forloop.last %}
+        <div class="chain-link">
+            <div class="chain-arrow">&#8595;</div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
