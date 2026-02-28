@@ -16,7 +16,7 @@
 
     <div class="blockchain-chain">
         {% for block in blocks reversed %}
-        <div class="block-card {% if forloop.last %}block-genesis{% endif %}">
+        <div class="block-card {% if forloop.last %}block-genesis{% endif %} reveal">
             <div class="block-header">
                 <span class="block-index">Block #{{ block.index }}</span>
                 {% if forloop.last %}<span class="badge badge-genesis">Genesis</span>{% endif %}

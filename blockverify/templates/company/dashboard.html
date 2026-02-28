@@ -10,7 +10,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="stats-grid">
+    <div class="stats-grid reveal-stagger reveal">
         <div class="stat-card stat-card-blue">
             <div class="stat-number">{{ total_verifications }}</div>
             <div class="stat-label">Total Verifications</div>
@@ -30,7 +30,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="action-cards">
+    <div class="action-cards reveal-stagger reveal">
         <a href="{% url 'verify_certificate' %}" class="action-card action-card-primary">
             <div class="action-icon">&#128270;</div>
             <h3>Verify Certificate</h3>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Recent Verifications -->
-    <div class="dashboard-section">
+    <div class="dashboard-section reveal">
         <h2 class="section-title-sm">Recent Verifications</h2>
         {% if recent_verifications %}
         <div class="table-responsive">
